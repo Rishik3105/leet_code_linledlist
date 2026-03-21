@@ -1,20 +1,55 @@
-# Definition for singly-linked list.
-# class ListNode(object):
-#     def __init__(self, val=0, next=None):
-#         self.val = val
-#         self.next = next
-class Solution(object):
-    def insertionSortList(self, head):
-        if not head:
-            return head
-        dummy = ListNode(0)  # sorted list dummy head
-        curr = head
-        while curr:
-            prev = dummy
-            while prev.next and prev.next.val < curr.val:
-                prev = prev.next
-            next_node = curr.next
-            curr.next = prev.next
-            prev.next = curr
-            curr = next_node
-        return dummy.next
+class InsertionSortLinkedList:
+    class _Node:
+        __slots__ = 'element', 'next'
+        def __init__(self, element, next=None):
+            self.element = element
+            self.next = next
+    def __init__(self):
+        self._head = None
+        self._size = 0
+    def __len__(self):
+        return self._size
+    def insert(self, value):
+        new = self._Node(value)
+
+        if self._head is None:
+            self._head = new
+        else:
+            temp = self._head
+            while temp.next:
+                temp = temp.next
+            temp.next = new
+        self._size += 1
+    def sort(self):
+        sorted_head = None 
+        current = self._head
+        while current:
+            next_node = current.next
+            if sorted_head is None or current.element < sorted_head.element:
+                current.next = sorted_head
+                sorted_head = current
+            else:
+                temp = sorted_head
+                while temp.next and temp.next.element < current.element:
+                    temp = temp.next
+                current.next = temp.next
+                temp.next = current
+            current = next_node
+        self._head = sorted_head
+    def display(self):
+        temp = self._head
+        while temp:
+            print(temp.element, end=" ")
+            temp = temp.next
+        print()
+if __name__ == "__main__":
+    nums = list(map(int, input("Enter your sequence: ").split()))
+    ll = InsertionSortLinkedList()
+    for num in nums:
+        ll.insert(num)
+    print("Original list:")
+    ll.display()
+    ll.sort()
+    print("Sorted list:")
+    ll.display()
+    print("Size:", len(ll))
